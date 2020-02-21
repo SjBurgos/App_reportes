@@ -31,13 +31,13 @@ class ReportePersonasPDF(View):
         # Establecemos el tamaño de letra en 16 y el tipo de letra Helvetica
         pdf.setFont("Times-Roman", 10)
         # Dibujamos una cadena en la ubicación X,Y especificada
-        pdf.drawString(400, 790, b" PERFIL DE EMPRESAS")
+        pdf.drawString(390, 790, b" PERFIL DE PARTICIPANTES")
         pdf.drawString(426, 774, u"CÓDIGO EVENTO ")
         pdf.drawString(466, 761, u"########")
-        pdf.drawString(35, 720, u"Evento:") ; pdf.drawString(260, 720, u"Aula:"); pdf.drawString(410, 720, u"Horario:")
+        pdf.drawString(35, 720, u"Programa:") ; pdf.drawString(260, 720, u"Duración:")
         pdf.drawString(35, 705, u"Promoción:") ; pdf.drawString(260, 705, u"Fecha Inicio:")
-        pdf.drawString(35, 690, u"Módulo:") ; pdf.drawString(260, 690, u"Fecha Final:")
-        pdf.drawString(35, 675, u"Docente:") ; pdf.drawString(260, 675, u"Duración:")
+        pdf.drawString(35, 690, u"Curso:") ; pdf.drawString(260, 690, u"Fecha Final:")
+        pdf.drawString(35, 675, u"Instructor:") ; pdf.drawString(260, 675, u"Tipo de Capacitación:")
 
 
     def pie_pagina(self,pdf):
@@ -54,45 +54,40 @@ class ReportePersonasPDF(View):
 
     def tabla(self,pdf,y):
         #Creamos una tupla de encabezados para neustra tabla
-        width, height = A4
         styles = getSampleStyleSheet()
         styleN = styles["BodyText"]
         styleN.alignment = TA_LEFT
         styleBH = styles["Normal"]
         styleBH.alignment = TA_CENTER
-        hparticipante = Paragraph('''<b>N.-</b>''', styleBH)
-        hemail1 = Paragraph('''<b>Sesión</b>''', styleBH)
-        hemail2 = Paragraph('''<b>Fecha</b>''', styleBH)
-        hcelular = Paragraph('''<b>Firma</b>''', styleBH)
-        htelf_domicilio = Paragraph('''<b>H.Entrada</b>''', styleBH)
-        htelf_trabajo = Paragraph('''<b>H.Salida</b>''', styleBH)
-        hdireccion = Paragraph('''<b>H.Entrada</b>''', styleBH)
-        nombre= Paragraph('''<b>H.Salida</b>''',styleBH)
-        #harea = Paragraph('''<b>Área</b>''', styleBH)
-        encabezados = (hparticipante,hemail1,hemail2,hcelular,htelf_domicilio,htelf_trabajo,hdireccion,nombre)
-        encabezado2=('planifcadas','Ejecutada')
+        hnum = Paragraph('''<b>N°.-</b>''', styleBH)
+        hcedula = Paragraph('''<b>Cedula</b>''', styleBH)
+        hnombre = Paragraph('''<b>Nombre</b>''', styleBH)
+        htitulo3 = Paragraph('''<b>Titulo tercer nivel</b>''', styleBH)
+        htitulo4 = Paragraph('''<b>Titulo cuarto nivel</b>''', styleBH)
+        hprofesion = Paragraph('''<b>Profesion</b>''', styleBH)
+        hcargo = Paragraph('''<b>Cargo</b>''', styleBH)
+        harea = Paragraph('''<b>Área</b>''', styleBH)
+        encabezados = (hnum,hcedula,hnombre,htitulo3,htitulo4,hprofesion,hcargo,harea)
         #Creamos una lista de tuplas que van a contener a las personas
-        detalles = [('1')]
+        detalles = [('0'),('1')]
         #Establecemos el tamaño de cada una de las columnas de la tabla
-        detalle_orden = Table([encabezados]+[encabezado2] + detalles, colWidths=[1 * cm, 2 * cm, 4 * cm, 4 * cm,2*cm,2*cm,2*cm,2*cm])
+        detalle_orden = Table([encabezados] + detalles, colWidths=[0.9 * cm, 2 * cm, 2 * cm, 2.5 * cm,2.5*cm,2.5*cm,2*cm])
         #Aplicamos estilos a las celdas de la tabla
         detalle_orden.setStyle(TableStyle(
             [
                 #La primera fila(encabezados) va a estar centrada
-                #('ALIGN',(0,0),(2,0),'CENTER'),
+                ('ALIGN',(0,0),(2,0),'CENTER'),
                 #Los bordes de todas las celdas serán de color negro y con un grosor de 1
                 ('GRID', (0, 0), (-1, -1), 0.5, colors.black), 
-                #Para unir celdas sea horiziltal o vertical 
-                #('SPAN',(-1,-1),(-3,-1)),
+                ('SPAN',(-1,-1),(-3-1))
                 #El tamaño de las letras de cada una de las celdas será de 10
                 ('FONTSIZE', (0, 0), (-1, -1), 10),
             ]
         ))
-
         #Establecemos el tamaño de la hoja que ocupará la tabla 
         detalle_orden.wrapOn(pdf, 850, 650)
         #Definimos la coordenada donde se dibujará la tabla
-        detalle_orden.drawOn(pdf,50,y)
+        detalle_orden.drawOn(pdf, 60,y)
     def get(self, request, ):
             
             #Indicamos el tipo de contenido a devolver, en este caso un pdf
@@ -102,7 +97,7 @@ class ReportePersonasPDF(View):
             #Canvas nos permite hacer el reporte con coordenadas X y Y
             pdf = canvas.Canvas(buffer)
             #Llamo al método donde están definidos los datos que aparecen en el reporte.
-            y = 590 
+            y = 600
             self.cabecera(pdf)
             self.pie_pagina(pdf)
             self.tabla(pdf,y)

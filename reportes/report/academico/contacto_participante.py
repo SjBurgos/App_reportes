@@ -37,7 +37,7 @@ class ReportePersonasPDF(View):
         pdf.drawString(35, 720, u"Evento:") ; pdf.drawString(260, 720, u"Aula:"); pdf.drawString(410, 720, u"Horario:")
         pdf.drawString(35, 705, u"Promoción:") ; pdf.drawString(260, 705, u"Fecha Inicio:")
         pdf.drawString(35, 690, u"Módulo:") ; pdf.drawString(260, 690, u"Fecha Final:")
-        pdf.drawString(35, 675, u"Docente:") ; pdf.drawString(260, 675, u"Duración:")
+        pdf.drawString(35, 675, u"Tipo de capacitación:") ; pdf.drawString(260, 675, u"Duración:")
 
 
     def pie_pagina(self,pdf):
@@ -60,39 +60,36 @@ class ReportePersonasPDF(View):
         styleN.alignment = TA_LEFT
         styleBH = styles["Normal"]
         styleBH.alignment = TA_CENTER
-        hparticipante = Paragraph('''<b>N.-</b>''', styleBH)
-        hemail1 = Paragraph('''<b>Sesión</b>''', styleBH)
-        hemail2 = Paragraph('''<b>Fecha</b>''', styleBH)
-        hcelular = Paragraph('''<b>Firma</b>''', styleBH)
-        htelf_domicilio = Paragraph('''<b>H.Entrada</b>''', styleBH)
-        htelf_trabajo = Paragraph('''<b>H.Salida</b>''', styleBH)
-        hdireccion = Paragraph('''<b>H.Entrada</b>''', styleBH)
-        nombre= Paragraph('''<b>H.Salida</b>''',styleBH)
+        hparticipante = Paragraph('''<b>PARTICIPANTE</b>''', styleBH)
+        hemail1 = Paragraph('''<b>Email1</b>''', styleBH)
+        hemail2 = Paragraph('''<b>Email2</b>''', styleBH)
+        hcelular = Paragraph('''<b>Celular</b>''', styleBH)
+        htelf_domicilio = Paragraph('''<b>Telefono Domicilio</b>''', styleBH)
+        htelf_trabajo = Paragraph('''<b>Telefono Trabajo</b>''', styleBH)
+        hdireccion = Paragraph('''<b>Dirección</b>''', styleBH)
+        nombre= Paragraph('''Steen''',styleBH)
         #harea = Paragraph('''<b>Área</b>''', styleBH)
-        encabezados = (hparticipante,hemail1,hemail2,hcelular,htelf_domicilio,htelf_trabajo,hdireccion,nombre)
-        encabezado2=('planifcadas','Ejecutada')
+        encabezados = (hparticipante,hemail1,hemail2,hcelular,htelf_domicilio,htelf_trabajo,hdireccion)
         #Creamos una lista de tuplas que van a contener a las personas
-        detalles = [('1')]
+        detalles = [(nombre,'','')]
         #Establecemos el tamaño de cada una de las columnas de la tabla
-        detalle_orden = Table([encabezados]+[encabezado2] + detalles, colWidths=[1 * cm, 2 * cm, 4 * cm, 4 * cm,2*cm,2*cm,2*cm,2*cm])
+        detalle_orden = Table([encabezados] + detalles, colWidths=[3.5 * cm, 2 * cm, 2 * cm, 2.5 * cm,2.5*cm,2.5*cm,2*cm])
         #Aplicamos estilos a las celdas de la tabla
         detalle_orden.setStyle(TableStyle(
             [
                 #La primera fila(encabezados) va a estar centrada
-                #('ALIGN',(0,0),(2,0),'CENTER'),
+                ('ALIGN',(0,0),(2,0),'CENTER'),
                 #Los bordes de todas las celdas serán de color negro y con un grosor de 1
                 ('GRID', (0, 0), (-1, -1), 0.5, colors.black), 
-                #Para unir celdas sea horiziltal o vertical 
-                #('SPAN',(-1,-1),(-3,-1)),
                 #El tamaño de las letras de cada una de las celdas será de 10
                 ('FONTSIZE', (0, 0), (-1, -1), 10),
             ]
         ))
-
         #Establecemos el tamaño de la hoja que ocupará la tabla 
         detalle_orden.wrapOn(pdf, 850, 650)
+        
         #Definimos la coordenada donde se dibujará la tabla
-        detalle_orden.drawOn(pdf,50,y)
+        detalle_orden.drawOn(pdf,60,y)
     def get(self, request, ):
             
             #Indicamos el tipo de contenido a devolver, en este caso un pdf
